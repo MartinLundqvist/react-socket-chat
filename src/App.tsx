@@ -1,45 +1,44 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { useEffect, useRef, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
+import { ClientToServerEvents, IUser, ServerToClientEvents } from '../types';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const socketRef =
+    useRef<Socket<ServerToClientEvents, ClientToServerEvents>>();
+  const [user, setUser] = useState('');
+  const [users, setUsers] = useState<IUser[]>([]);
+
+  useEffect(() => {
+    socketRef.current = io('http://localhost:4000'); // TODO: This needs to be updated for production
+    socketRef.current.on('pushUsers', (users: IUser[]) => {
+      setUsers(users);
+    });
+  }, []);
+
+  const addUser = () => {
+    const newUser: IUser = {
+      name: user,
+      uuid: '',
+    };
+    socketRef.current?.emit('addUser', newUser);
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+    <div className='App'>
+      <input
+        type='text'
+        value={user}
+        onChange={(e) => setUser(e.target.value)}
+      />
+      <button onClick={addUser}>Add</button>
+      <ul>
+        {users.map((usr) => (
+          <li key={usr.uuid}>{usr.name}</li>
+        ))}
+      </ul>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

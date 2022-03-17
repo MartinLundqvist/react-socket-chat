@@ -1,61 +1,67 @@
 import { IMessage, IRoom, IUser } from '../types';
 
 export class SessionStore {
-  private sessions: Map<string, string>;
+  private sessions: Map<string, IUser>;
 
   constructor() {
     this.sessions = new Map();
   }
+
+  public saveSession(sessionId: string, user: IUser) {
+    this.sessions.set(sessionId, user);
+  }
+
+  public getSession(sessionId: string): IUser | undefined {
+    return this.sessions.get(sessionId);
+  }
+
+  public removeSession(sessionId: string) {
+    return this.sessions.delete(sessionId);
+  }
 }
 
 export class Store {
-  private rooms: IRoom[];
-  private users: IUser[];
+  private rooms: Map<string, IRoom>;
+  private users: Map<string, IUser>;
 
   constructor() {
-    this.rooms = [];
-    this.users = [];
+    this.rooms = new Map();
+    this.users = new Map();
   }
 
   public addUser(user: IUser) {
-    this.users.push(user);
+    this.users.set(user.uuid, { ...user, connected: true });
     console.log(this.users);
   }
 
   public getUsers(): IUser[] {
-    return [...this.users];
+    return [...this.users.values()];
+  }
+
+  public getRooms(): IRoom[] {
+    return [...this.rooms.values()];
   }
 
   public addRoom(room: IRoom) {
-    this.rooms.push(room);
+    this.rooms.set(room.uuid, room);
 
     console.log(this.rooms);
   }
 
-  addMessageToRoom(roomId: string, message: IMessage) {
-    const targetRoom = this.rooms.find((room) => room.uuid === roomId);
-    targetRoom && targetRoom.state.messages.push(message);
+  public addMessageToRoom(roomId: string, message: IMessage) {
+    const targetRoom = this.rooms.get(roomId);
+    targetRoom && targetRoom.messages.push(message);
   }
 
   public removeUser(user: IUser) {
-    this.users = this.users.filter((usr) => usr.uuid !== user.uuid);
+    this.users.delete(user.uuid);
   }
 
-  public removeRoom(roomId: string) {
-    this.rooms = this.rooms.filter((rm) => rm.uuid !== roomId);
+  public markUserOffline(user: IUser) {
+    this.users.set(user.uuid, { ...user, connected: false });
+  }
+
+  public removeRoom(room: IRoom) {
+    this.rooms.delete(room.uuid);
   }
 }
-
-interface InMemoryStore {
-  sessions: Map<string, string>;
-  rooms: IRoom[];
-  users: IUser[];
-}
-
-const store: InMemoryStore = {
-  sessions: new Map<string, string>(),
-  rooms: [],
-  users: [],
-};
-
-export { store };

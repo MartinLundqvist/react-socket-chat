@@ -3,10 +3,12 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import { IOCOnnection } from './io-connection';
-import { Store } from './in-memory-store';
+import { SessionStore, Store } from './in-memory-store';
+import { ServerIO } from '../types';
 
-// Initialize the global store
+// Initialize the global stores
 const store = new Store();
+const sessions = new SessionStore();
 
 // Set up the express app
 const app = express();
@@ -20,15 +22,15 @@ if (process.env.NODE_ENV === 'production') {
 
 // Set up the HTTP Server and connect it to the express app
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
+const io = new Server<ServerIO>(httpServer, {
   cors: {
     origin: '*', // TODO: Review whether this is really a good idea...
   },
 });
 
-// Listen for connections to the socket
+// Listen for connections to the socket, and create an IOConnection object for each connection
 io.on('connection', (socket) => {
-  new IOCOnnection(io, socket, store);
+  new IOCOnnection(io, socket, store, sessions);
 });
 
 // Start the server

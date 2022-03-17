@@ -1,6 +1,13 @@
+import { Server, Socket } from 'socket.io';
+import { Socket as ClientSocket } from 'socket.io-client';
 import { IUser, IRoom, IMessage } from '../types';
 
+export type TErrors = 'User not found' | 'Other';
+
 export interface ServerToClientEvents {
+  // Server sends the current session and user information
+  pushSession: (sessionId: string, user: IUser) => void;
+
   // Server sends current list of users
   pushUsers: (users: IUser[]) => void;
 
@@ -9,6 +16,9 @@ export interface ServerToClientEvents {
 
   // Server sends messages for a specific room or private chat
   pushMessage: (message: IMessage) => void;
+
+  // Server sends an error
+  error: (error: TErrors) => void;
 }
 
 export interface ClientToServerEvents {
@@ -19,5 +29,26 @@ export interface ClientToServerEvents {
   sendMessage: (message: IMessage) => void;
 
   // Client asks to join a room. The server will respond back with a true (joined) or false (room is full)
-  joinRoom: (roomId: string) => void;
+  joinRoom: (room: IRoom) => void;
 }
+
+export interface InterServerEvents {}
+
+export interface SocketData {}
+
+export type ServerIO = Server<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  InterServerEvents,
+  SocketData
+>;
+export type ServerSocket = Socket<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  InterServerEvents,
+  SocketData
+>;
+export type ChatSocket = ClientSocket<
+  ServerToClientEvents,
+  ClientToServerEvents
+>;

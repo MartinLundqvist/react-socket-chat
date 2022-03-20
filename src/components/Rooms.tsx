@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { IMessenger } from '../../types';
 import { useChat } from '../contexts/ChatContext';
+import { Shadows } from './Mixins';
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,14 +13,15 @@ const Wrapper = styled.div`
   padding: 2rem;
   grid-column: 1 / 2;
   grid-rows: 2 / -1;
-  border-radius: 50px;
-  background: #e0e0e0;
-  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+  ${Shadows}
   overflow-y: scroll;
 `;
 
 const RoomLink = styled.div`
-  font-size: 1.25rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  font-size: var(--size-font);
 
   &:hover {
     cursor: pointer;
@@ -75,7 +77,7 @@ const Rooms = (): JSX.Element => {
             key={room.uuid}
             onClick={() => changeRoom(room)}
           >
-            {room.name} ({room.connected ? 'Online' : 'Offline'})
+            {room.name}({room.connected ? 'Online' : 'Offline'})
           </RoomLink>
         ))}
     </Wrapper>

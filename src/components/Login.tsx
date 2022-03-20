@@ -19,6 +19,7 @@ const Dialog = styled.div`
   border-radius: 50px;
   background-color: var(--color-bg);
   box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+  font-size: var(--size-font);
 `;
 
 const Input = styled.input`
@@ -30,7 +31,7 @@ const Input = styled.input`
   height: 100%;
   background-color: transparent;
   font: inherit;
-  font-size: 1.25rem;
+  font-size: var(--size-font);
   color: var(--color-text-send);
 
   &:focus {
@@ -53,7 +54,7 @@ const Button = styled.button`
   border: none;
   border-radius: 100%;
   font: inherit;
-  font-size: 1.5rem;
+  font-size: var(--size-font-large);
   color: var(--color-bg);
   background-color: var(--color-text);
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useChat } from '../contexts/ChatContext';
 import Login from './Login';
+import { Shadows } from './Mixins';
 
 const Wrapper = styled.div`
   display: flex;
@@ -9,9 +10,8 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 0 2rem 0 2rem;
   grid-column: 1 / -1;
-  border-radius: 50px;
-  background-color: var(--color-bg);
-  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+
+  ${Shadows}
 `;
 
 const Button = styled.div`

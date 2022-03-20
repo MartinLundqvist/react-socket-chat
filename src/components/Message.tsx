@@ -2,32 +2,46 @@ import { IMessage } from '../../types';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useChat } from '../contexts/ChatContext';
+import { ShadowsMessageIn, ShadowsMessageOut } from './Mixins';
 
 const Wrapper = styled.div`
   flex-shrink: 0;
   /* flex-grow: 1; */
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
-  gap: 0.7rem;
-  border-radius: 25px 25px 25px 0;
-  padding: 1rem;
-  /* max-width: 80%; */
-  background: #e0e0e0;
-  box-shadow: 10px 10px 30px #bebebe, -10px -10px 30px #ffffff;
-  font-size: 1.25rem;
-  &.me {
-    margin-left: auto;
-    border-radius: 25px 25px 0 25px;
-    text-align: right;
-  }
-`;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  max-width: 60%;
+  ${ShadowsMessageIn}
+  font-size: var(--size-font);
 
-const User = styled.div`
-  border-radius: 100%;
-  padding: 0.5rem;
-  background-color: var(--color-text);
-  color: var(--color-bg);
+  .header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.8em;
+  }
+
+  &.me {
+    ${ShadowsMessageOut}
+    text-align: right;
+    margin-left: auto;
+  }
+
+  /* .initials {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    padding: 0.5rem;
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    width: 2rem;
+    height: 2rem;
+  } */
 `;
 
 interface IMessageProps {
@@ -56,8 +70,11 @@ const Message = ({ message }: IMessageProps): JSX.Element => {
 
   return (
     <Wrapper className={isMyMessage ? 'me' : ''}>
-      {!isMyMessage && <User>{fromInitials}</User>}
-      <div>{message.content}</div>
+      <div className='header'>
+        <span>{message.from.name}</span>
+        <span>{new Date(message.time).toTimeString().split(' ')[0]}</span>
+      </div>
+      <div className='content'>{message.content}</div>
     </Wrapper>
   );
 };

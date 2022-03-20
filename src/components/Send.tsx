@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { IMessage } from '../../types';
 import { useChat } from '../contexts/ChatContext';
+import { Shadows } from './Mixins';
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,10 +12,8 @@ const Wrapper = styled.div`
   padding: 0 2rem 0 2rem;
   grid-column: 1 / -1;
   grid-row: 3 / -1;
-  border-radius: 50px;
-  background: #e0e0e0;
-  box-shadow: inset 20px 20px 60px #bebebe, inset -20px -20px 60px #ffffff;
-  font-size: 1.25rem;
+  ${Shadows}
+  font-size: var(--size-font);
 `;
 
 const Input = styled.input`
@@ -24,7 +23,7 @@ const Input = styled.input`
   /* height: 100%; */
   background: transparent;
   font: inherit;
-  font-size: 1.25rem;
+  font-size: var(--size-font);
   color: var(--color-text-send);
   border-bottom: 1px dashed;
   border-color: var(--color-text-send-alpha);
@@ -49,7 +48,7 @@ const Button = styled.button`
   border: none;
   border-radius: 100%;
   font: inherit;
-  font-size: 1.5rem;
+  font-size: var(--size-font-large);
   color: var(--color-bg);
   background-color: var(--color-text);
 

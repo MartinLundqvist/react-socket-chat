@@ -7,7 +7,7 @@ import Message from './Message';
 const Wrapper = styled.div`
   display: flex;
   /* height: 100%; */
-  gap: 0.5rem;
+  gap: 0.8rem;
   flex-direction: column;
   /* justify-content: end; */
   align-items: start;

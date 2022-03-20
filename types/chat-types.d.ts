@@ -1,12 +1,15 @@
+export type TMessengers = 'User' | 'Room';
+
 export interface IMessenger {
   name: string;
   uuid: string;
+  type: TMessengers;
 }
 
 export interface IRoom extends IMessenger {
-  max_users: number;
-  users: IUser[];
-  messages: IMessage[];
+  max_users?: number;
+  userIds: Set<string>; // This will refer to the user ID
+  // messages: IMessage[];
 }
 
 export interface IUser extends IMessenger {

@@ -5,10 +5,31 @@ import path from 'path';
 import { IOCOnnection } from './io-connection';
 import { SessionStore, Store } from './in-memory-store';
 import { ServerIO } from '../types';
+import { nanoid } from 'nanoid';
 
 // Initialize the global stores
 const store = new Store();
 const sessions = new SessionStore();
+
+// Add the initial rooms
+store.addRoom({
+  name: 'General',
+  uuid: nanoid(),
+  type: 'Room',
+  userIds: new Set(),
+});
+store.addRoom({
+  name: 'Off topic',
+  uuid: nanoid(),
+  type: 'Room',
+  userIds: new Set(),
+});
+store.addRoom({
+  name: 'Drones',
+  uuid: nanoid(),
+  type: 'Room',
+  userIds: new Set(),
+});
 
 // Set up the express app
 const app = express();
@@ -38,4 +59,10 @@ const PORT = process.env.PORT || '4000';
 httpServer.listen(PORT, () => {
   console.log('Server started on port ' + PORT.toString());
   console.log(process.cwd());
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, closing down server.');
+  httpServer.close();
+  process.exit(0);
 });

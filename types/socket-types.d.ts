@@ -1,10 +1,14 @@
 import { Server, Socket } from 'socket.io';
 import { Socket as ClientSocket } from 'socket.io-client';
-import { IUser, IRoom, IMessage } from '../types';
+import { IUser, IRoom, IMessage, IMessenger } from '../types';
 
 export type TErrors = 'User not found' | 'Other';
+export type TSuccesses = 'Connected';
 
 export interface ServerToClientEvents {
+  // Server acknowledges connection
+  pushConnected: (message: TSuccesses) => void;
+
   // Server sends the current session and user information
   pushSession: (sessionId: string, user: IUser) => void;
 
@@ -23,13 +27,26 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   // Client adds a new user to the server
-  addUser: (user: IUser) => void;
+  addUser: (name: string) => void;
 
   //  Client sends a message to a user or room
   sendMessage: (message: IMessage) => void;
 
   // Client asks to join a room. The server will respond back with a true (joined) or false (room is full)
-  joinRoom: (room: IRoom) => void;
+  joinRoom: (room: IMessenger) => void;
+
+  // Client asks for all messages to a particular Messenger (room or user), the server calls back with the list
+  fetchMessagesTo: (
+    messenger: IMessenger,
+    callback: (messages: IMessage[]) => void
+  ) => void;
+
+  // Client asks for all messages between two messengers (rooms or users), the server calls back with the list
+  fetchMessagesBetween: (
+    messenger1: IMessenger,
+    messenger2: IMessenger,
+    callback: (messages: IMessage[]) => void
+  ) => void;
 }
 
 export interface InterServerEvents {}

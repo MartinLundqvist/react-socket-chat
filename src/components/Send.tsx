@@ -21,13 +21,13 @@ const Input = styled.input`
   border: none;
   /* outline: 1px solid red; */
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   background: transparent;
   font: inherit;
   font-size: 1.25rem;
   color: var(--color-text-send);
-  border-bottom: 1px dashed black;
-  border-color: var(--color-text-send);
+  border-bottom: 1px dashed;
+  border-color: var(--color-text-send-alpha);
 
   &:focus {
     outline: none;
@@ -75,14 +75,16 @@ const Send = (): JSX.Element => {
   const { sendMessage, me, activeRoom } = useChat();
 
   const handleSend = () => {
-    const newMessage: IMessage = {
-      from: me,
-      to: activeRoom,
-      content: message,
-      time: new Date().getTime(),
-    };
-    sendMessage(newMessage);
-    setMessage('');
+    if (message) {
+      const newMessage: IMessage = {
+        from: me,
+        to: activeRoom,
+        content: message,
+        time: new Date().getTime(),
+      };
+      sendMessage(newMessage);
+      setMessage('');
+    }
   };
 
   const handleKeyDown = (key: string) => {

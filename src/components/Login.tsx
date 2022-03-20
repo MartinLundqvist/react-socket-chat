@@ -24,7 +24,7 @@ const Dialog = styled.div`
 const Input = styled.input`
   border: none;
   border-bottom: 1px dashed black;
-  border-color: var(--color-text-send);
+  border-color: var(--color-text-send-alpha);
   /* outline: 1px solid red; */
   width: 100%;
   height: 100%;

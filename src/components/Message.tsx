@@ -4,20 +4,21 @@ import { useEffect, useState } from 'react';
 import { useChat } from '../contexts/ChatContext';
 
 const Wrapper = styled.div`
+  flex-shrink: 0;
+  /* flex-grow: 1; */
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 0.5rem;
-  border-radius: 50px 50px 50px 0;
+  gap: 0.7rem;
+  border-radius: 25px 25px 25px 0;
   padding: 1rem;
-  max-width: 80%;
+  /* max-width: 80%; */
   background: #e0e0e0;
-  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
-  overflow: scroll;
+  box-shadow: 10px 10px 30px #bebebe, -10px -10px 30px #ffffff;
   font-size: 1.25rem;
   &.me {
     margin-left: auto;
-    border-radius: 50px 50px 0 50px;
+    border-radius: 25px 25px 0 25px;
     text-align: right;
   }
 `;

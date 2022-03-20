@@ -10,6 +10,7 @@
   --color-bg-ligther: hsl(0, 0%, 100%);
   --color-text: hsl(29, 93%, 50%);
   --color-text-send: hsl(29, 90%, 23%);
+  --color-text-send-alpha: rgba(111, 57, 6, 0.3);
 }
 
 body {

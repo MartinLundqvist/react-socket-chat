@@ -74,7 +74,7 @@ const Rooms = (): JSX.Element => {
             key={room.uuid}
             onClick={() => changeRoom(room)}
           >
-            {room.name}
+            {room.name} ({room.connected ? 'Online' : 'Offline'})
           </RoomLink>
         ))}
     </Wrapper>

@@ -176,10 +176,15 @@ export class IOCOnnection {
   private async disconnect(reason: string) {
     console.log('User disconnected ' + this.user.name);
 
-    // Disconnect the user from the store
-    this.store.markUserOffline(this.user);
+    // See if user is still connected on some other socket. We can test this using the in(room) method since
+    // we always create private room (user.uuid) for every socket that connects
+    const matchingSockets = await this.io.in(this.user.uuid).allSockets();
+    if (matchingSockets.size === 0) {
+      // Disconnect the user from the store
+      this.store.markUserOffline(this.user);
 
-    // Publish the updated user list
-    this.io.emit('pushUsers', this.store.getUsers());
+      // Publish the updated user list
+      this.io.emit('pushUsers', this.store.getUsers());
+    }
   }
 }

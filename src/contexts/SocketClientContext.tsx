@@ -13,6 +13,7 @@ import {
   IMessenger,
   IRoom,
   IUser,
+  TErrors,
   TSuccesses,
 } from '../../types';
 
@@ -152,6 +153,12 @@ export const SocketClientContextProvider = ({
     setRooms(rooms);
   }, []);
 
+  const onErrorListener = useCallback((error: TErrors) => {
+    localStorage.removeItem('sessionId');
+    window.alert('Session not found. Clearing the sessionId. Try again.');
+    window.location.reload();
+  }, []);
+
   useEffect(() => {
     // First we connect to the server
     const URL = 'http://localhost:4000'; // TODO: This needs to be updated for production
@@ -165,6 +172,7 @@ export const SocketClientContextProvider = ({
     socketRef.current?.on('pushRooms', onPushRoomsListener);
     socketRef.current?.on('pushUsers', onPushUsersListener);
     socketRef.current?.on('pushMessage', onPushMessageListener);
+    socketRef.current?.on('error', onErrorListener);
 
     // Then we check if there is a session to restore
     const sessionId = localStorage.getItem('sessionId');
@@ -183,6 +191,7 @@ export const SocketClientContextProvider = ({
       socketRef.current?.off('pushRooms', onPushRoomsListener);
       socketRef.current?.off('pushUsers', onPushUsersListener);
       socketRef.current?.off('pushMessage', onPushMessageListener);
+      socketRef.current?.on('error', onErrorListener);
     };
   }, []);
 

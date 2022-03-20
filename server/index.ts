@@ -37,8 +37,21 @@ const app = express();
 // If in production mode, serve up the front-end
 if (process.env.NODE_ENV === 'production') {
   const cwd = process.cwd();
-  app.use('/assets', express.static(path.join(cwd, 'dist/assets/')));
+  const test = __dirname;
+  console.log('cwd is ' + cwd + ' and __dirname is ' + test);
+  app.use(
+    '/assets',
+    express.static(path.join(cwd, 'dist/assets/'), {
+      extensions: ['.js', '.css'],
+    })
+  );
   app.get('*', (req, res) => res.sendFile(path.join(cwd, 'dist/index.html')));
+
+  console.log(
+    'Production mode detected. Serving static files from: ' +
+      path.join(cwd, 'dist/assets/')
+  );
+  console.log('...and resovling /* to ' + path.join(cwd, 'dist/index.html'));
 }
 
 // Set up the HTTP Server and connect it to the express app
@@ -63,6 +76,12 @@ httpServer.listen(PORT, () => {
 
 process.on('SIGINT', () => {
   console.log('SIGINT received, closing down server.');
+  httpServer.close();
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, closing down server.');
   httpServer.close();
   process.exit(0);
 });

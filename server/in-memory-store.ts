@@ -46,11 +46,13 @@ export class Store {
   }
 
   public getUsers(): IUser[] {
-    return [...this.users.values()];
+    return Array.from(this.users.values());
+    // return [...this.users.values()];
   }
 
   public getRooms(): IRoom[] {
-    return [...this.rooms.values()];
+    return Array.from(this.rooms.values());
+    // return [...this.rooms.values()];
   }
 
   public addRoom(room: IRoom) {

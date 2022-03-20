@@ -6,7 +6,7 @@ import {
   useRef,
   useCallback,
 } from 'react';
-import { connect, io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import {
   ChatSocket,
   IMessage,
@@ -161,7 +161,8 @@ export const SocketClientContextProvider = ({
 
   useEffect(() => {
     // First we connect to the server
-    const URL = 'http://localhost:4000'; // TODO: This needs to be updated for production
+    const URL = import.meta.env.VITE_URL || '';
+    // console.log(import.meta.env);
     console.log('Connecting to ' + URL);
     socketRef.current = io(URL);
 

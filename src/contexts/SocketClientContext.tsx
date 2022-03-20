@@ -13,7 +13,6 @@ import {
   IMessenger,
   IRoom,
   IUser,
-  ServerToClientEvents,
   TSuccesses,
 } from '../../types';
 
@@ -64,10 +63,6 @@ interface ISocketClientContextProviderProps {
   children: React.ReactNode;
 }
 
-type TListener = {
-  [key in keyof ServerToClientEvents]: () => void;
-};
-
 export const SocketClientContextProvider = ({
   children,
 }: ISocketClientContextProviderProps): JSX.Element => {
@@ -84,6 +79,10 @@ export const SocketClientContextProvider = ({
 
   const addUser = useCallback((name: string) => {
     socketRef.current?.emit('addUser', name);
+  }, []);
+
+  const fetchSession = useCallback((sessionId: string) => {
+    socketRef.current?.emit('fetchSession', sessionId);
   }, []);
 
   const sendMessage = useCallback((message: IMessage) => {
@@ -135,7 +134,9 @@ export const SocketClientContextProvider = ({
 
   const onPushSessionListener = useCallback(
     (sessionId: string, user: IUser) => {
+      // We update Me to reflect the current user ID, and also set the localStore session
       setMe(user);
+      localStorage.setItem('sessionId', sessionId);
     },
     []
   );
@@ -169,9 +170,10 @@ export const SocketClientContextProvider = ({
     const sessionId = localStorage.getItem('sessionId');
 
     if (!sessionId) {
-      console.log('No sessionId found, waiting for user...');
+      console.log('No sessionId found, waiting for user to log in.');
     } else {
       console.log('Found sessionId in localStorage to be ' + sessionId);
+      fetchSession(sessionId);
     }
 
     return () => {

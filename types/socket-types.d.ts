@@ -29,6 +29,9 @@ export interface ClientToServerEvents {
   // Client adds a new user to the server
   addUser: (name: string) => void;
 
+  // Client adds a new user to the server
+  fetchSession: (sessionId: string) => void;
+
   //  Client sends a message to a user or room
   sendMessage: (message: IMessage) => void;
 

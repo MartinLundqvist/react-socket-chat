@@ -64,54 +64,9 @@ export class IOCOnnection {
     // Tell client it's connected successfully
     socket.emit('pushConnected', 'Connected');
 
-    //
-
-    // // The client should EITHER connect with a sessionId OR with a name - never both!
-    // // TODO: This is prone to bad DX...
-    // const { sessionId, name } = socket.handshake.auth;
-
-    // // If there is a sessionId, then recreate the session
-    // if (sessionId) {
-    //   console.log('Found sessionId' + sessionId);
-    //   const user = this.sessions.getSession(sessionId);
-    //   if (!user) {
-    //     this.socket.emit('error', 'User not found');
-    //     // TODO: Not sure if this is a particular graceful exit...
-    //     this.socket.disconnect();
-    //     return;
-    //   }
-    //   this.user = user;
-    //   this.sessionId = sessionId;
-    // }
-
-    // // If there is a name, then we will create a new session with the new user
-    // if (name) {
-    //   console.log('Found new user ' + name);
-    //   this.sessionId = nanoid();
-
-    //   this.user = {
-    //     name,
-    //     uuid: nanoid(),
-    //   };
-
-    //   // Let's store the new sessions
-    //   this.sessions.saveSession(this.sessionId, this.user);
-    // }
-
-    // // Emit the session detail to the client for local storage
-    // this.socket.emit('pushSession', this.sessionId, this.user);
-
-    // // Make sure the user has access to their private space
-    // this.socket.join(this.user.uuid);
-
-    // // Add the user to the list of users and mark it as connected
-    // this.store.addUser(this.user);
-
-    // // Emit the updated list of users to the client
-    // this.socket.emit('pushUsers', this.store.getUsers());
-
     /* Start event listeners */
     this.socket.on('addUser', (name) => this.addUser(name));
+    this.socket.on('fetchSession', (sessionId) => this.fetchSession(sessionId));
 
     // this.socket.on('joinRoom', (room) => this.joinRoom(room.uuid));
     this.socket.on('sendMessage', (message) => this.sendMessage(message));
@@ -123,6 +78,23 @@ export class IOCOnnection {
       this.fetchMessagesBetween(messenger1, messenger2, callback)
     );
     this.socket.on('joinRoom', (room) => this.joinRoom(room));
+  }
+
+  private fetchSession(sessionId: string) {
+    if (sessionId) {
+      console.log('Received sessionId' + sessionId);
+      const user = this.sessions.getSession(sessionId);
+      if (!user) {
+        this.socket.emit('error', 'User not found');
+        // TODO: Not sure if this is a particular graceful exit...
+        this.socket.disconnect();
+        return;
+      }
+      this.user = user;
+      this.sessionId = sessionId;
+
+      this.initializeSession();
+    }
   }
 
   private fetchMessages(
@@ -141,7 +113,6 @@ export class IOCOnnection {
 
   private addUser(name: string) {
     // New user coming in, first we initialize it
-
     this.user = {
       name,
       uuid: nanoid(),
@@ -149,8 +120,22 @@ export class IOCOnnection {
       type: 'User',
     };
 
-    // Let's store the new session
+    // Let's create and store the new session
+    this.sessionId = nanoid();
     this.sessions.saveSession(this.sessionId, this.user);
+
+    this.initializeSession();
+  }
+
+  private initializeSession() {
+    if (!this.sessionId || !this.user.uuid) {
+      console.log(
+        'Server tried to initialize without valid sessionId or user.uuid'
+      );
+      console.log(this.sessionId);
+      console.log(this.user);
+      return;
+    }
 
     // Emit the session detail to the client for local storage
     this.socket.emit('pushSession', this.sessionId, this.user);
@@ -184,9 +169,6 @@ export class IOCOnnection {
     this.store.saveMessage(message);
 
     const { to, from } = message;
-
-    // this.socket.emit('pushMessage', message);
-    // this.io.to(this.user.uuid).emit('pushMessage', message);
 
     this.io.to(to.uuid).to(from.uuid).emit('pushMessage', message);
   }

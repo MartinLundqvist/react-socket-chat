@@ -16,19 +16,19 @@ store.addRoom({
   name: 'General',
   uuid: nanoid(),
   type: 'Room',
-  userIds: new Set(),
+  members_uuid: [],
 });
 store.addRoom({
   name: 'Off topic',
   uuid: nanoid(),
   type: 'Room',
-  userIds: new Set(),
+  members_uuid: [],
 });
 store.addRoom({
   name: 'Drones',
   uuid: nanoid(),
   type: 'Room',
-  userIds: new Set(),
+  members_uuid: [],
 });
 
 // Set up the express app

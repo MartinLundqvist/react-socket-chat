@@ -10,7 +10,8 @@
     "build": "tsc && vite build",
     "postbuild": "tsc server/index.ts --outDir dist/server --esModuleInterop",
     "preview": "vite preview",
-    "start": "NODE_ENV=production node dist/server/index.js"
+    "start": "NODE_ENV=production node dist/server/index.js",
+    "tests": "node src/tests.js"
   },
   "dependencies": {
     "express": "^4.17.3",

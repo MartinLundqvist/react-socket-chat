@@ -8,7 +8,7 @@ export interface IMessenger {
 
 export interface IRoom extends IMessenger {
   max_users?: number;
-  userIds: Set<string>; // This will refer to the user ID
+  members_uuid: string[]; // This will refer to the user IDs that are members of the room
   // messages: IMessage[];
 }
 

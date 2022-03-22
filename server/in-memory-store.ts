@@ -42,23 +42,18 @@ export class Store {
   public addUser(user: IUser) {
     console.log('I am in Store.addUser with ' + user.name);
     this.users.set(user.uuid, { ...user, connected: true });
-    // console.log(this.users);
   }
 
   public getUsers(): IUser[] {
     return Array.from(this.users.values());
-    // return [...this.users.values()];
   }
 
   public getRooms(): IRoom[] {
     return Array.from(this.rooms.values());
-    // return [...this.rooms.values()];
   }
 
   public addRoom(room: IRoom) {
     this.rooms.set(room.uuid, room);
-
-    // console.log(this.rooms);
   }
 
   public saveMessage(message: IMessage) {
@@ -113,23 +108,31 @@ export class Store {
 
   public markUserOffline(user: IUser) {
     // If the user doesn't exist, then skip this
-    if (this.users.get(user.uuid)) {
-      this.users.set(user.uuid, { ...user, connected: false });
-    }
+    if (!this.users.get(user.uuid)) return;
+
+    this.users.set(user.uuid, { ...user, connected: false });
   }
 
   public removeRoom(room: IRoom) {
     this.rooms.delete(room.uuid);
   }
 
-  // TODO: The adding / removing of useIds to a room does not have any effect currently
+  // TODO: The adding / removing of members to a room does not have any effect currently
   public addUserToRoom(user: IUser, room: IMessenger) {
-    let targetRoom = this.rooms.get(room.uuid);
-    targetRoom?.userIds.add(user.uuid);
+    const targetRoom = this.rooms.get(room.uuid);
+    if (!targetRoom) return;
+
+    const tempSet = new Set(targetRoom.members_uuid);
+    tempSet.add(user.uuid);
+    targetRoom.members_uuid = Array.from(tempSet);
   }
 
   public removeUserFromRoom(user: IUser, room: IRoom) {
-    let targetRoom = this.rooms.get(room.uuid);
-    targetRoom?.userIds.delete(user.uuid);
+    const targetRoom = this.rooms.get(room.uuid);
+    if (!targetRoom) return;
+
+    const tempSet = new Set(targetRoom.members_uuid);
+    tempSet.delete(user.uuid);
+    targetRoom.members_uuid = Array.from(tempSet);
   }
 }

@@ -11,10 +11,23 @@ const Wrapper = styled.div`
   align-items: start;
   gap: 1rem;
   padding: 2rem;
-  grid-column: 1 / 2;
-  grid-rows: 2 / -1;
+  grid-area: rooms;
   ${Shadows}
   overflow-y: scroll;
+
+  @media (max-width: 800px) {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    padding: 0 2rem 0 2rem;
+    overflow-x: scroll;
+
+    div {
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
+  }
 `;
 
 const RoomLink = styled.div`

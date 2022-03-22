@@ -12,9 +12,20 @@ const Wrapper = styled.div`
   display: grid;
   gap: 1.5rem;
   padding: 2rem;
-  grid-template-rows: 4rem 30rem 4rem;
+  grid-template-areas:
+    'header header'
+    'rooms chat'
+    'send send';
+
   grid-template-columns: 15rem minmax(30rem, 1fr);
-  /* overflow: hidden; */
+  grid-template-rows: 4rem 30rem 4rem;
+
+  @media (max-width: 800px) {
+    grid-template-areas: 'header' 'rooms' 'chat' 'send';
+
+    grid-template-columns: 100%;
+    grid-template-rows: 3rem 3rem minmax(30rem, 1fr) 3rem;
+  }
 `;
 
 const App = (): JSX.Element => {

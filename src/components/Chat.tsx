@@ -12,8 +12,7 @@ const Wrapper = styled.div`
   /* justify-content: end; */
   align-items: start;
   padding: 2rem;
-  grid-column: 2 / -1;
-  grid-rows: 2 / -1;
+  grid-area: chat;
   overflow-y: scroll;
   /* overflow-x: visible; */
   background-color: none;

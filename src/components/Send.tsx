@@ -10,8 +10,7 @@ const Wrapper = styled.div`
   justify-content: start;
   align-items: center;
   padding: 0 2rem 0 2rem;
-  grid-column: 1 / -1;
-  grid-row: 3 / -1;
+  grid-area: send;
   ${Shadows}
   font-size: var(--size-font);
 `;

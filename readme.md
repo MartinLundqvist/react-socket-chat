@@ -11,5 +11,5 @@
 - Make the chat scroll be pretty... (dissapear at the edges, get a nice looking scrollbar)
 - Refactor the contexts
 - Delete a message
-- Make the chat responsive
+- DONE. Make the chat responsive
 - Add a "new messages" thing.
